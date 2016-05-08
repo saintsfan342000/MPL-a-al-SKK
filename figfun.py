@@ -268,9 +268,12 @@ def TickLabelFS(fig,fs=30,which='both'):
     p.draw()
     return None
 
-# automatically update ylim of ax2 when ylim of ax1 changes.
-## Not working at the moment
-#ax_R.callbacks.connect("ylim_changed", MpaAxis)
+def data2axes(ax,coords):
+    '''
+    Converts data coords into axes coords.
+    Most handy for adding annotation MyArrows within the axes box via ginput.
+    '''
+    return ax.transAxes.inverted().transform( ax.transData.transform( coords ) )
 
 class FancyArrow_original(Polygon):
     """
