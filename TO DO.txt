@@ -1,0 +1,3 @@
+
+- Create a walk-through example.  Find a typical SKK figure, and try to duplicate it.
+- Embed in ipynb might be the best way to go
