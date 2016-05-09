@@ -7,3 +7,5 @@ But the way he makes plots totally sucks.  I won't name the software, but let's 
 
 Motivated by my disdain for this POS software for which the most recent version was release in the last 5 years but still looks and operates like the original version from 1990; motivated by the hope that if I could make identical-looking figures through some other platform then I could stop using that pathetic program; and hoping to just learn a whole lot more about matplotlib...
 Here are some style sheets and functions which get us really stinkin' close to his standards.
+
+Within a week or so I hope to upload a jupyter notebook with a walkthrough and using these formatting tools.
