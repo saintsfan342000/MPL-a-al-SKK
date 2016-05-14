@@ -2,17 +2,17 @@ import matplotlib.pyplot as p
 import numpy as n
 from matplotlib.patches import Polygon
 
-def myax(fig,conversion=None,rightaxlabel=None,AL=.22,HL=.045,OH=.3,TW=.0045,HW=.5,PLW=0):
+def myax(fig,conversion=None,rightaxlabel=None,AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0):
     '''
     Converts a figure with to K style.
     Requires figure hande or p.gcf()
     Optional args are unit conversion on label if doing a second right ax,
     then properties for the axis arrows.  These numbers are in Axes Coordinates.
-    AL(=.22) is arrow length, including the head
+    AL(=.2) is arrow length, including the head
     HL(=.045) is head length.
     HW(=.5) is head width as fraction of the head length!
-    OH(=2.9) is overhang as fraction of head length!
-    TW(=.0045) is tail width (in absolute axes values)
+    OH(=0.3) is overhang as fraction of head length!
+    TW(=.0035) is tail width (in absolute axes values)
     PLW(=0) is the patch **kwarg linewidth
     Args for arrow patch pertain to the y-axis arrow, and are scaled acoordingly for the x-axis.
     The defaults are meant to optimize the appearance of the y-axis arrow.
@@ -22,11 +22,12 @@ def myax(fig,conversion=None,rightaxlabel=None,AL=.22,HL=.045,OH=.3,TW=.0045,HW=
     ax = fig.gca()
     #Test right now wether a second right axis is being called
     makeright = None not in [conversion,rightaxlabel]
-    # Figure dimensions and axes bounds points in figure coordinates
+    # Figure dimensions and axis bounds in figure coordinates
     figwd,fight = fig.get_size_inches()
     bboxAX = fig.transFigure.inverted().transform(ax.bbox.get_points())
     x1,y1,x2,y2 = bboxAX.flatten()
     h2w = (y2-y1)*fight/(x2-x1)/figwd   #Ht to wt. conversion
+    # Remove existing MyArrows; Currenty messed up if rightaxis already made
     for i in ax.get_children():
         if type(i) is MyArrow:
             i.remove()
@@ -48,12 +49,14 @@ def myax(fig,conversion=None,rightaxlabel=None,AL=.22,HL=.045,OH=.3,TW=.0045,HW=
             lab.set_size(30)
 
     ########## X Label and Arrow ##########
-    # Get the bounding box for the x tick labels and convert it to axes coords, and set position accordingly
+    # Get the bounding box for the x tick labels and convert it to axes coords
     bboxX = inv.transform( axX.get_ticklabel_extents(R)[0].get_points() )
     xlab.set_va('top')
     xlab.set_horizontalalignment('left')
+    # Move the axis label, and grab its new bbox
     axX.set_label_coords( (3/4), n.min(bboxX[:,1]), transform = ax.transAxes)
     bboxLx = inv.transform(xlab.get_window_extent(R).get_points())
+    # Set arrow parameters and draw the arrow
     left = n.min(bboxLx[:,0]) 
     AL1 = AL            #(no *h2w because we want arrow length to scale with axis size)
     HL1=HL*h2w
@@ -65,32 +68,34 @@ def myax(fig,conversion=None,rightaxlabel=None,AL=.22,HL=.045,OH=.3,TW=.0045,HW=
     ax.add_patch(ar)
     ar.set_clip_on(False)
     
-    ########## Y label #############
+    ########## Y label and Arrow #############
     # Get bbox for ytick labels
     bboxY = inv.transform( axY.get_ticklabel_extents(R)[0].get_points() )
     # Rotate and postion ylabel, then translate it based on the bbox overlap
+    # We have to set its coords twice because rotating inevitibly leads to overlap with the ticklabels
+    # So we set it once, calculate the overlap, then shift it once more to eliminate the overlap
     ylab.set_verticalalignment('center')
     ylab.set_horizontalalignment('center')
     ylab.set_rotation(0)
-    #xpos, ypos = n.min(bboxY[:,0]), (3/4) * n.abs(n.diff(bboxY[:,1])[0])
     xpos, ypos = n.min(bboxY[:,0]), (3/4) 
     axY.set_label_coords( xpos , ypos , transform = ax.transAxes )
     bboxLy = inv.transform(ylab.get_window_extent(R).get_points())
     xpos = xpos - ( n.max(bboxLy[:,0]) - xpos )
     axY.set_label_coords( xpos , ypos , transform = ax.transAxes)
+    # Set arrow parameters and draw the arrow
     bot = n.min(bboxLy[:,1])
-    # Add arrow
     OH1=OH
     HL1=HL
     HW1=HW
     TW1=TW
     AL1=AL
-    ar=MyArrow(xpos,bot-AL1,0,AL1,head_length=HL1,overhang=OH1, head_width=HW1,
+    ar=MyArrow(xpos,bot-AL1-hl,0,AL1,head_length=HL1,overhang=OH1, head_width=HW1,
                     tail_width=TW1,lw=PLW,transform=ax.transAxes,color='k')
     ax.add_patch(ar)
     ar.set_clip_on(False)
     
     ###### Right Y-label #########
+    ## Works the same way as previous y label formatting
     if makeright:
         axL, axR = ax, ax.twinx()
         y1, y2 = axL.get_ylim()
@@ -114,13 +119,16 @@ def myax(fig,conversion=None,rightaxlabel=None,AL=.22,HL=.045,OH=.3,TW=.0045,HW=
         HW1=HW
         TW1=TW
         AL1=AL
-        ar=MyArrow(xpos,bot-AL1,0,AL1,head_length=HL1,overhang=OH1, head_width=HW1,
+        ar=MyArrow(xpos,bot-AL1-hl,0,AL1,head_length=HL1,overhang=OH1, head_width=HW1,
                     tail_width=TW1,lw=PLW,transform=ax.transAxes,color='k')
         axR.add_patch(ar)
         ar.set_clip_on(False)
-
-    p.draw()
-    return None
+        p.draw()
+        p.sca( axL )
+        return axL, axR
+    else:
+        p.draw()
+        return ax
 
 class MyArrow(Polygon):
     """
@@ -238,14 +246,14 @@ def ksi2Mpa(ksi):
     """
     return ksi * 6.89475908677537
 
-def TickLabelFS(fig,fs=30,which='both'):
+def TickLabelFS(ax,fs=30,which='both'):
     '''
     Pass a figure handle.
     fs=fontsize
     Which specifies which axis (x or y) you want to change the ticklabel size of
     which = 'both' or two, 'x' or 0, 'y' or 1
     '''
-    xls, yls = fig.gca().xaxis.get_ticklabels(), fig.gca().yaxis.get_ticklabels()
+    xls, yls = ax.xaxis.get_ticklabels(), ax.yaxis.get_ticklabels()
     if which in ['both' , 2]:
         itlist = [xls,yls]
     elif which in ['x',0]:
@@ -264,6 +272,34 @@ def data2axes(ax,coords):
     Most handy for adding annotation MyArrows within the axes box via ginput.
     '''
     return ax.transLimits.transform(coords)
+    
+def eztext(ax,text,loc='upper left'):
+    '''
+    For placing text in the corners of the axis.
+    Give the axis handle, the text, and the location.
+    Location parameters:
+        'upper left' = 'ul' = 0 = 'top left' = 'tl'
+        'upper right' = 'ur' = 1 = 'top right' = 'tr'
+        'lower right = 'lr'  = 2 = 'bottom right'  = 'br'
+        'lower left' = 'll' = 3 = 'bottom left' = 'bl'
+    '''
+    if loc in ['upper left', 'ul', 0, 'top left', 'tl']:
+        x, y = .02, .98
+        ha, va = 'left', 'top'
+    elif loc in ['upper right', 'ur', 1, 'top right', 'tr']:
+        x, y = .98, .98
+        ha, va = 'right', 'top'
+    elif loc in ['lower right', 'lr', 2, 'bottom right', 'br']:
+        x, y = .02, .02
+        ha, va = 'right', 'bottom'
+    elif loc in ['lower left', 'll', 3, 'bottom left', 'bl']:
+        x, y = .02, .02
+        ha, va = 'left', 'bottom'
+    else:
+        raise ValueError('Got unknown location, "{}"'.format(loc))
+    tx = ax.text(x,y,text,ha=ha,va=va,transform=ax.transAxes)
+    p.draw()
+    return tx
 
 class FancyArrow_original(Polygon):
     """
