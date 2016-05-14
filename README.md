@@ -1,6 +1,8 @@
 # MPL-a-al-SKK
 Getting Matplotlib to meet the maniacal figure standards of Dr. Stelios Kyriakides
 
+## Now with a tutorial!  See "Tutorial.ipynb" for a little walkthrough.
+
 My grad school advisor is a great man and a brilliant engineer.  We should all be so lucky as to find the passion for our work that he has for his. It's a privalege to work for him.
 
 But the way he makes plots totally sucks.  I won't name the software, but let's just say that it makes me wish I could use excel.  He uses it because he likes to tinker with plots: add arrows on the axis labels, put annotations all over the place, etc.  It's excessive, IMO:  the annotations detract from the often-significant message of the plot.  But that's his taste, so it is what it is and I don't fight it.  But Kaleidagraph...oh man.  I'll fight it til the day I die (or graduate, whichever comes first).
