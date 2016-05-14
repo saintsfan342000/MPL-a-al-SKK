@@ -1,3 +1,9 @@
+- Adjust default arrow props? Slightly shorter, and thinner tail?
+- Add feature to myax that lets you specify label position?
+- Have myax return handles for the two axes that get created when adding a right ax?
+- Add p.sca(axleft) to end of myax
+- Some kind of extext function definition to annotate the upper left, top right, etc.
+  - No need for .01,.98,ha,va,transform anymore
 
+COMPLETED TO DOs
 - Create a walk-through example.  Find a typical SKK figure, and try to duplicate it.
-- Embed in ipynb might be the best way to go
