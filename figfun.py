@@ -281,10 +281,10 @@ def eztext(ax,text,loc='upper left'):
         'lower left' = 'll' = 3 = 'bottom left' = 'bl'
     '''
     if loc in ['upper left', 'ul', 0, 'top left', 'tl']:
-        x, y = .01, .99
+        x, y = .01, .98
         ha, va = 'left', 'top'
     elif loc in ['upper right', 'ur', 1, 'top right', 'tr']:
-        x, y = .99, .99
+        x, y = .99, .98
         ha, va = 'right', 'top'
     elif loc in ['lower right', 'lr', 2, 'bottom right', 'br']:
         x, y = .99, .01
