@@ -125,7 +125,6 @@ def myax(fig,conversion=None,rightaxlabel=None,AL=.2,HL=.045,HW=.5,OH=.3,TW=.003
         axR.add_patch(ar)
         ar.set_clip_on(False)
         p.draw()
-        p.sca( axL )
         return axL, axR
     else:
         p.draw()
