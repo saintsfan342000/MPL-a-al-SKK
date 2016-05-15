@@ -4,6 +4,7 @@ from matplotlib.patches import Polygon
 
 def myax(fig,conversion=None,rightaxlabel=None,AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0):
     '''
+    myax(fig,conversion=None,rightaxlabel=None,AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0)
     Converts a figure with to K style.
     Requires figure hande or p.gcf()
     Optional args are unit conversion on label if doing a second right ax,
@@ -89,7 +90,7 @@ def myax(fig,conversion=None,rightaxlabel=None,AL=.2,HL=.045,HW=.5,OH=.3,TW=.003
     HW1=HW
     TW1=TW
     AL1=AL
-    ar=MyArrow(xpos,bot-AL1-hl,0,AL1,head_length=HL1,overhang=OH1, head_width=HW1,
+    ar=MyArrow(xpos,bot-AL1-HL1/2,0,AL1,head_length=HL1,overhang=OH1, head_width=HW1,
                     tail_width=TW1,lw=PLW,transform=ax.transAxes,color='k')
     ax.add_patch(ar)
     ar.set_clip_on(False)
@@ -119,7 +120,7 @@ def myax(fig,conversion=None,rightaxlabel=None,AL=.2,HL=.045,HW=.5,OH=.3,TW=.003
         HW1=HW
         TW1=TW
         AL1=AL
-        ar=MyArrow(xpos,bot-AL1-hl,0,AL1,head_length=HL1,overhang=OH1, head_width=HW1,
+        ar=MyArrow(xpos,bot-AL1-HL1/2,0,AL1,head_length=HL1,overhang=OH1, head_width=HW1,
                     tail_width=TW1,lw=PLW,transform=ax.transAxes,color='k')
         axR.add_patch(ar)
         ar.set_clip_on(False)
@@ -150,7 +151,6 @@ class MyArrow(Polygon):
             float or None. Default: 0.2
           *tail_width*: width of full arrow tail
             float or None. Default: Length/50
-
           *shape*: ['full', 'left', 'right'] (default: 'full')
             draw the left-half, right-half, or full arrow
           *head_starts_at_zero*: [True | False] (default: False)
@@ -160,9 +160,7 @@ class MyArrow(Polygon):
             True if head is to be counted in calculating the length.            
         Other valid kwargs (inherited from :class:`Patch`) are:
         %(Patch)s
-
         """
- 
         distance = n.sqrt(dx ** 2 + dy ** 2)
         length = distance
         if head_length is None:
@@ -174,7 +172,7 @@ class MyArrow(Polygon):
         if overhang is None:
             overhang = 0.3
         if tail_width is None:
-            tail_width = length / 50
+            tail_width = .0035
         if not length:
             verts = []  # display nothing if empty
         else:
@@ -284,16 +282,16 @@ def eztext(ax,text,loc='upper left'):
         'lower left' = 'll' = 3 = 'bottom left' = 'bl'
     '''
     if loc in ['upper left', 'ul', 0, 'top left', 'tl']:
-        x, y = .02, .98
+        x, y = .01, .99
         ha, va = 'left', 'top'
     elif loc in ['upper right', 'ur', 1, 'top right', 'tr']:
-        x, y = .98, .98
+        x, y = .99, .99
         ha, va = 'right', 'top'
     elif loc in ['lower right', 'lr', 2, 'bottom right', 'br']:
-        x, y = .02, .02
+        x, y = .99, .01
         ha, va = 'right', 'bottom'
     elif loc in ['lower left', 'll', 3, 'bottom left', 'bl']:
-        x, y = .02, .02
+        x, y = .01, .01
         ha, va = 'left', 'bottom'
     else:
         raise ValueError('Got unknown location, "{}"'.format(loc))
@@ -316,30 +314,22 @@ class FancyArrow_original(Polygon):
         Constructor arguments
           *width*: float (default: 0.001)
             width of full arrow tail
-
           *length_includes_head*: [True | False] (default: False)
             True if head is to be counted in calculating the length.
-
           *head_width*: float or None (default: 3*width)
             total width of the full arrow head
-
           *head_length*: float or None (default: 1.5 * head_width)
             length of arrow head
-
           *shape*: ['full', 'left', 'right'] (default: 'full')
             draw the left-half, right-half, or full arrow
-
           *overhang*: float (default: 0)
             fraction that the arrow is swept back (0 overhang means
             triangular shape). Can be negative or greater than one.
-
           *head_starts_at_zero*: [True | False] (default: False)
             if True, the head starts being drawn at coordinate 0
             instead of ending at coordinate 0.
-
         Other valid kwargs (inherited from :class:`Patch`) are:
         %(Patch)s
-
         """
         if head_width is None:
             head_width = 20 * width
