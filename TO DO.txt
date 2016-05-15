@@ -1,9 +1,25 @@
-- Adjust default arrow props? Slightly shorter, and thinner tail?
 - Add feature to myax that lets you specify label position?
-- Have myax return handles for the two axes that get created when adding a right ax?
-- Add p.sca(axleft) to end of myax
-- Some kind of extext function definition to annotate the upper left, top right, etc.
-  - No need for .01,.98,ha,va,transform anymore
+i.e., add (ypos, xpos arguments?)
+
+
+
+
+- Adhere to Caswells advice of myfunction(ax,data,style,**kwargs) return artists
+  - See https://youtu.be/1vAZ1bJZkXo?t=23m1s
+
+  
+
+
 
 COMPLETED TO DOs
-- Create a walk-through example.  Find a typical SKK figure, and try to duplicate it.
+- Create a walk-through example.  Find a typical SKK figure, and try to duplicate it. 
+https://github.com/saintsfan342000/MPL-a-al-SKK/commit/2bddc6f74a45ff55065535a61fc8dd66f922f338
+- Adjust default arrow props? Slightly shorter, and thinner tail?
+- Have myax return handles for the two axes that get created when adding a right ax?
+- Some kind of extext function definition to annotate the upper left, top right, etc. (eztext!)
+- Have myax return handles for the two axes that get created when adding a right ax?
+https://github.com/saintsfan342000/MPL-a-al-SKK/commit/149205d4b5b091bffc94d1a302f747e80a6d18bc
+
+FAILED TO DOs
+- Add p.sca(axleft) to end of myax
+    Didn't solve the problem of data referring to right axis after adding second axis
