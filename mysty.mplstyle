@@ -21,14 +21,14 @@ ytick.direction         : out           # direction: in, out, or inout
 ytick.major.size        : 6         # major tick size in points
 ytick.major.width       : 1.5         # major tick width in points
 
-axes.linewidth          : 1.5         # edge linewidth
-#axes.color_cycle        : 5DA5DA, FAA43A , 60BD68 , F15854 , B276B2, DECF3F, F17CB0, B2912F
-#                         blue,   orange,  green,   red,   purple, yellow,  pink,   brown,  
-axes.color_cycle        : F15854, 5DA5DA, FAA43A, 60BD68, DECF3F, B276B2, 4D4D4D
-
+axes.linewidth          : 1.5
 axes.labelsize          : 22
-#axes.labelpad          : 10.5       #   Might work on some installations
 lines.linewidth         : 1.5
 lines.antialiased       : True
+
+#If version >= 1.5
+####axes.prop_cycle     : cycler('color','F15854, 5DA5DA, FAA43A, 60BD68, DECF3F, B276B2, 4D4D4D')
+#Else
+axes.color_cycle        : F15854, 5DA5DA, FAA43A, 60BD68, DECF3F, B276B2, 4D4D4D
 
 legend.fontsize         : 12
