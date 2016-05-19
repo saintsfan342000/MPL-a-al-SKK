@@ -2,7 +2,8 @@
 i.e., add (ypos, xpos arguments?)
 - Fig the right-aligned text positons in eztext
 i.e., 0.99 is too close to right edge
-
+- Change how myax() corrects the fontsize of fractions in y-axis labels
+i.e., rather than specifying 35 or whatever, make it a 1.1*current fontsize so that the routing works for differnt layouts which use smaller fonts (i.e, mysty-quad)
 
 
 - Adhere to Caswells advice of myfunction(ax,data,style,**kwargs) return artists
