@@ -1,6 +1,7 @@
 - Add feature to myax that lets you specify label position?
 i.e., add (ypos, xpos arguments?)
-
+- Fig the right-aligned text positons in eztext
+i.e., 0.99 is too close to right edge
 
 
 
