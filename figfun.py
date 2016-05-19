@@ -298,6 +298,22 @@ def eztext(ax,text,loc='upper left'):
     p.draw()
     return tx
 
+def makequad():
+    ''' 
+    Return a new figure with 2x2 tiled axes, properly spaced according to Fig.3
+    in Chen, Scales, Kyriakides.
+    '''
+    fig1 = p.figure()
+    axht = (4/8.9)*.8
+    axwt = (4.7/11.1)*.8
+    vertgap = (1/8.9)*.8
+    horzgap = (2.1/11.1)*.8
+    ax111 = fig1.add_axes([.1,.1+axht+vertgap,axwt,axht])
+    ax112 = fig1.add_axes([.1+axwt+horzgap,.1+axht+vertgap,axwt,axht])
+    ax121 = fig1.add_axes([.1,.1,axwt,axht])
+    ax122 = fig1.add_axes([.1+axwt+horzgap,.1,axwt,axht])
+    return fig1, ax111, ax112, ax121, ax122
+
 class FancyArrow_original(Polygon):
     """
     Like Arrow, but lets you set head width and head height independently.
