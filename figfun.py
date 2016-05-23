@@ -130,6 +130,22 @@ def myax(fig,conversion=None,rightaxlabel=None,AL=.2,HL=.045,HW=.5,OH=.3,TW=.003
         p.draw()
         return ax
 
+def makequad():
+    ''' 
+    Return a new figure with 2x2 tiled axes, properly spaced according to Fig.3
+    in Chen, Scales, Kyriakides.
+    '''
+    fig1 = p.figure()
+    axht = (4/8.9)*.8
+    axwt = (4.7/11.1)*.8
+    vertgap = (1/8.9)*.8
+    horzgap = (2.1/11.1)*.8
+    ax111 = fig1.add_axes([.1,.1+axht+vertgap,axwt,axht])
+    ax112 = fig1.add_axes([.1+axwt+horzgap,.1+axht+vertgap,axwt,axht])
+    ax121 = fig1.add_axes([.1,.1,axwt,axht])
+    ax122 = fig1.add_axes([.1+axwt+horzgap,.1,axwt,axht])
+    return fig1, ax111, ax112, ax121, ax122
+
 class MyArrow(Polygon):
     """
     Like Arrow, but lets you set head width and head height independently.
@@ -298,22 +314,6 @@ def eztext(ax,text,loc='upper left'):
     p.draw()
     return tx
 
-def makequad():
-    ''' 
-    Return a new figure with 2x2 tiled axes, properly spaced according to Fig.3
-    in Chen, Scales, Kyriakides.
-    '''
-    fig1 = p.figure()
-    axht = (4/8.9)*.8
-    axwt = (4.7/11.1)*.8
-    vertgap = (1/8.9)*.8
-    horzgap = (2.1/11.1)*.8
-    ax111 = fig1.add_axes([.1,.1+axht+vertgap,axwt,axht])
-    ax112 = fig1.add_axes([.1+axwt+horzgap,.1+axht+vertgap,axwt,axht])
-    ax121 = fig1.add_axes([.1,.1,axwt,axht])
-    ax122 = fig1.add_axes([.1+axwt+horzgap,.1,axwt,axht])
-    return fig1, ax111, ax112, ax121, ax122
-
 class FancyArrow_original(Polygon):
     """
     Like Arrow, but lets you set head width and head height independently.
@@ -395,3 +395,58 @@ class FancyArrow_original(Polygon):
             verts = np.dot(coords, M) + (x + dx, y + dy)
 
         Polygon.__init__(self, list(map(tuple, verts)), closed=True, **kwargs)
+
+def colorbar(ax,cbar,AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0):
+    '''
+    colorbar(ax,cbar,AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0)
+    
+    *** Something seriously weird about how this (doesn't work).
+        When a script calling this function is just run, it renders 
+        the arrow way far to the right of the cbar.
+        However, if plotting interactively in ipython, then calling
+        f.colorbar works just fine.
+    ***
+    
+    Formats the colorbar label appropriately and adds an arrow that is identical to the 
+    arrow on the figure axis.
+    
+    ax : the axis of the figure plot, NOT THE COLORBAR AXIS
+    cbar : the colorbar, NOT THE COLORBAR AXIS
+    The rest of the arguments are arrow props.
+    Some day maybe I'll have it copy the y-axis arrow rather than specifying props.
+    '''
+    fig = ax.get_figure()
+    cax = cbar.ax
+    #An inverse transform that will take me from display to data coordinates
+    # Notice that it is the plot axes, NOT the colorbar axes
+    inv = ax.transAxes.inverted()
+    #Handle for renderer
+    R = fig.canvas.get_renderer()
+    caxY = cax.yaxis
+    ylab = caxY.get_label()
+    
+    if ylab.get_text().find(r'\frac') != -1:
+            ylab.set_size(30)
+    
+    ticklabelbbox = inv.transform( caxY.get_ticklabel_extents(R)[1].get_points() )
+    ylab.set_verticalalignment('center')
+    ylab.set_horizontalalignment('center')
+    ylab.set_rotation(0)
+    xpos, ypos = n.max(ticklabelbbox[:,0]), (3/4)
+    caxY.set_label_coords( xpos , ypos , transform = ax.transAxes )
+    bboxLy = inv.transform(ylab.get_window_extent(R).get_points())
+    xpos = xpos + ( n.max(bboxLy[:,0]) - xpos )
+    caxY.set_label_coords( xpos , ypos , transform = ax.transAxes)
+    # Set arrow parameters and draw the arrow
+    bot = n.min(bboxLy[:,1])
+    OH1=OH
+    HL1=HL
+    HW1=HW
+    TW1=TW
+    AL1=AL
+    ar=MyArrow(xpos,bot-AL1-HL1/2,0,AL1,head_length=HL1,overhang=OH1, head_width=HW1,
+                    tail_width=TW1,lw=PLW,transform=ax.transAxes,color='k')
+    ax.add_patch(ar)
+    ar.set_clip_on(False)
+    p.draw()
+    return ar
