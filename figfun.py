@@ -400,11 +400,13 @@ def colorbar(ax,cbar,AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0):
     '''
     colorbar(ax,cbar,AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0)
     
-    *** Something seriously weird about how this (doesn't work).
+    *** Something seriously weird about how this (doesn't) works.
         When a script calling this function is just run, it renders 
         the arrow way far to the right of the cbar.
-        However, if plotting interactively in ipython, then calling
-        f.colorbar works just fine.
+        When plotting interactively in ipython and a long code block is pasted into the QTconsole
+        and f.colorbar() is contained in the code block, the arrow renders way far to the right.
+        But if plotting interactively and I do everything the same except call f.colorbar, 
+        then call f.colorbar on its own after the figure window has appeared, it works fine.
     ***
     
     Formats the colorbar label appropriately and adds an arrow that is identical to the 
