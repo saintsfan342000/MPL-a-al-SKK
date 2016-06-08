@@ -8,6 +8,7 @@ i.e., rather than specifying 35 or whatever, make it a 1.1*current fontsize so t
   the same functions used for the y-axes in myax would work
   But some adjustment of the arrow size is needed since the cbar.ax is so narrow
   cbar.ax.yaxis gives the yaxis then all of the same methods of before work.
+- Add **kwargs to eztext to pass to p.text
 
 - Adhere to Caswells advice of myfunction(ax,data,style,**kwargs) return artists
   - See https://youtu.be/1vAZ1bJZkXo?t=23m1s
