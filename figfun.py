@@ -286,7 +286,7 @@ def data2axes(ax,coords):
     '''
     return ax.transLimits.transform(coords)
     
-def eztext(ax,text,loc='upper left'):
+def eztext(ax,text,loc='upper left',**kwargs):
     '''
     For placing text in the corners of the axis.
     Give the axis handle, the text, and the location.
@@ -310,7 +310,7 @@ def eztext(ax,text,loc='upper left'):
         ha, va = 'left', 'bottom'
     else:
         raise ValueError('Got unknown location, "{}"'.format(loc))
-    tx = ax.text(x,y,text,ha=ha,va=va,transform=ax.transAxes)
+    tx = ax.text(x,y,text,ha=ha,va=va,transform=ax.transAxes,**kwargs)
     p.draw()
     return tx
 
