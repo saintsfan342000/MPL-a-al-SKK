@@ -1,14 +1,8 @@
 - Add feature to myax that lets you specify label position?
 i.e., add (ypos, xpos arguments?)
-- Fig the right-aligned text positons in eztext
-i.e., 0.99 is too close to right edge
 - Change how myax() corrects the fontsize of fractions in y-axis labels
 i.e., rather than specifying 35 or whatever, make it a 1.1*current fontsize so that the routing works for differnt layouts which use smaller fonts (i.e, mysty-quad)
-- A label and arrow formatter for colorbars
-  the same functions used for the y-axes in myax would work
-  But some adjustment of the arrow size is needed since the cbar.ax is so narrow
-  cbar.ax.yaxis gives the yaxis then all of the same methods of before work.
-- Add **kwargs to eztext to pass to p.text
+- Define a "make12" function like make quad but for 1x2 subplots
 
 - Adhere to Caswells advice of myfunction(ax,data,style,**kwargs) return artists
   - See https://youtu.be/1vAZ1bJZkXo?t=23m1s
@@ -25,7 +19,13 @@ https://github.com/saintsfan342000/MPL-a-al-SKK/commit/2bddc6f74a45ff55065535a61
 - Some kind of extext function definition to annotate the upper left, top right, etc. (eztext!)
 - Have myax return handles for the two axes that get created when adding a right ax?
 https://github.com/saintsfan342000/MPL-a-al-SKK/commit/149205d4b5b091bffc94d1a302f747e80a6d18bc
+- Add **kwargs to eztext to pass to p.text
+- A label and arrow formatter for colorbars
+  Done, but there is a bug.  Only works as a stand-alone function call in interactive mode
+
+
 
 FAILED TO DOs
 - Add p.sca(axleft) to end of myax
     Didn't solve the problem of data referring to right axis after adding second axis
+
