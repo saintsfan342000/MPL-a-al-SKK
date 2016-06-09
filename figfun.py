@@ -55,44 +55,46 @@ def myax(figOrAx,conversion=None,rightaxlabel=None,AL=.2,HL=.045,HW=.5,OH=.3,TW=
     # Check the labels to see whether they're mathtext fractions and increase size if so
     for lab in [xlab,ylab]:
         if lab.get_text().find(r'\frac') != -1:
-            lab.set_size(30)
+            current_size = ylab.get_size()
+            lab.set_size( current_size * (30/18) )
+            # 30 was found to be a good adjusted size for the incoming default of 18
 
     ########## X Label and Arrow ##########
     # Get the bounding box for the x tick labels and convert it to axes coords
-    bboxX = inv.transform( axX.get_ticklabel_extents(R)[0].get_points() )
+    bboxXticklabs = inv.transform( axX.get_ticklabel_extents(R)[0].get_points() )
     xlab.set_va('top')
     xlab.set_horizontalalignment('left')
     # Move the axis label, and grab its new bbox
-    axX.set_label_coords( (3/4), n.min(bboxX[:,1]), transform = ax.transAxes)
-    bboxLx = inv.transform(xlab.get_window_extent(R).get_points())
+    axX.set_label_coords( (3/4), n.min(bboxXticklabs[:,1]), transform = ax.transAxes)
+    bboxXlab = inv.transform(xlab.get_window_extent(R).get_points())
     # Set arrow parameters and draw the arrow
-    left = n.min(bboxLx[:,0]) 
+    left = n.min(bboxXlab[:,0]) 
     AL1 = AL            #(no *h2w because we want arrow length to scale with axis size)
     HL1=HL*h2w
     TW1=TW*(1/h2w)
     HW1=HW*(1/h2w)**2   # Squared because HW is a fraction of HL, and HL has been stretched by h2w
     OH1=OH              # No h2w here because OH is fraction of HL, which has already been scaled
-    ar=MyArrow(left-AL1-HL1/2,n.mean(bboxLx[:,1]),AL1,0,head_length=HL1,overhang=OH1,
+    ar=MyArrow(left-AL1-HL1/2,n.mean(bboxXlab[:,1]),AL1,0,head_length=HL1,overhang=OH1,
                     head_width=HW1,tail_width=TW1,lw=PLW,transform=ax.transAxes,color='k')
     ax.add_patch(ar)
     ar.set_clip_on(False)
     
     ########## Y label and Arrow #############
     # Get bbox for ytick labels
-    bboxY = inv.transform( axY.get_ticklabel_extents(R)[0].get_points() )
+    bboxYticklabs = inv.transform( axY.get_ticklabel_extents(R)[0].get_points() )
     # Rotate and postion ylabel, then translate it based on the bbox overlap
     # We have to set its coords twice because rotating inevitibly leads to overlap with the ticklabels
     # So we set it once, calculate the overlap, then shift it once more to eliminate the overlap
     ylab.set_verticalalignment('center')
     ylab.set_horizontalalignment('center')
     ylab.set_rotation(0)
-    xpos, ypos = n.min(bboxY[:,0]), (3/4) 
+    xpos, ypos = n.min(bboxYticklabs[:,0]), (3/4) 
     axY.set_label_coords( xpos , ypos , transform = ax.transAxes )
-    bboxLy = inv.transform(ylab.get_window_extent(R).get_points())
-    xpos = xpos - ( n.max(bboxLy[:,0]) - xpos )
+    bboxYlab = inv.transform(ylab.get_window_extent(R).get_points())
+    xpos = xpos - ( n.max(bboxYlab[:,0]) - xpos )
     axY.set_label_coords( xpos , ypos , transform = ax.transAxes)
     # Set arrow parameters and draw the arrow
-    bot = n.min(bboxLy[:,1])
+    bot = n.min(bboxYlab[:,1])
     OH1=OH
     HL1=HL
     HW1=HW
@@ -111,17 +113,17 @@ def myax(figOrAx,conversion=None,rightaxlabel=None,AL=.2,HL=.045,HW=.5,OH=.3,TW=
         axR.set_ylim(conversion(y1), conversion(y2))
         axR.set_ylabel(rightaxlabel)
         axYR = axR.yaxis
-        ylabR=axYR.get_label()
-        bboxYR = inv.transform( axYR.get_ticklabel_extents(R)[1].get_points() )
+        ylabR = axYR.get_label()
+        bboxYRticklabs = inv.transform( axYR.get_ticklabel_extents(R)[1].get_points() )
         ylabR.set_verticalalignment('center')
         ylabR.set_horizontalalignment('center')
         ylabR.set_rotation(0)
-        xpos, ypos = n.max(bboxYR[:,0]), (3/4)
+        xpos, ypos = n.max(bboxYRticklabs[:,0]), (3/4)
         axYR.set_label_coords( xpos , ypos , transform = ax.transAxes )
-        bboxLyR = inv.transform(ylabR.get_window_extent(R).get_points())
-        xpos = xpos + ( n.max(bboxLyR[:,0]) - xpos )
+        bboxYRlab = inv.transform(ylabR.get_window_extent(R).get_points())
+        xpos = xpos + ( n.max(bboxYRlab[:,0]) - xpos )
         axYR.set_label_coords( xpos , ypos , transform = ax.transAxes)
-        bot = n.min(bboxLyR[:,1])
+        bot = n.min(bboxYRlab[:,1])
         # Add arrow
         OH1=OH
         HL1=HL
