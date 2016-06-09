@@ -2,11 +2,11 @@ import matplotlib.pyplot as p
 import numpy as n
 from matplotlib.patches import Polygon
 
-def myax(fig,conversion=None,rightaxlabel=None,AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0):
+def myax(figOrAx,conversion=None,rightaxlabel=None,AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0):
     '''
     myax(fig,conversion=None,rightaxlabel=None,AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0)
     Converts a figure with to K style.
-    Requires figure hande or p.gcf()
+    Requires axes hande or p.gca() (figure handle is deprecated).
     Optional args are unit conversion on label if doing a second right ax,
     then properties for the axis arrows.  These numbers are in Axes Coordinates.
     AL(=.2) is arrow length, including the head
@@ -19,8 +19,16 @@ def myax(fig,conversion=None,rightaxlabel=None,AL=.2,HL=.045,HW=.5,OH=.3,TW=.003
     The defaults are meant to optimize the appearance of the y-axis arrow.
     If conversion and rightaxlabel are both not none, then the twinx() method is used to create a right ax
      '''
-    #Handle for figure axes
-    ax = fig.gca()
+    from matplotlib.figure import Figure
+    from matplotlib.axes._subplots import Subplot
+    if type( figOrAx )  is Figure:
+        fig = figOrAx
+        ax = fig.gca()
+    elif type( figOrAx ) is Subplot:
+        ax = figOrAx
+        fig = ax.get_figure()
+    else:
+        raise ValueError('Got invalid figure or axes type as first argument, "{}"'.format(loc))
     #Test right now wether a second right axis is being called
     makeright = None not in [conversion,rightaxlabel]
     # Figure dimensions and axis bounds in figure coordinates
