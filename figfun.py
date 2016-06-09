@@ -109,6 +109,10 @@ def myax(figOrAx,conversion=None,rightaxlabel=None,AL=.2,HL=.045,HW=.5,OH=.3,TW=
     ## Works the same way as previous y label formatting
     if makeright:
         axL, axR = ax, ax.twinx()
+        # Doesn't quite work but is an improvement
+        for i in axR.get_children():
+            if type(i) is MyArrow:
+                i.remove()
         y1, y2 = axL.get_ylim()
         axR.set_ylim(conversion(y1), conversion(y2))
         axR.set_ylabel(rightaxlabel)
