@@ -2,13 +2,21 @@ import matplotlib.pyplot as p
 import numpy as n
 from matplotlib.patches import Polygon
 
-def myax(figOrAx,conversion=None,rightaxlabel=None,AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0):
+def myax(fig_or_axes,
+        conversion=None,rightaxlabel=None,
+        nudge=None,
+        AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0):
     '''
-    myax(fig,conversion=None,rightaxlabel=None,AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0)
-    Converts a figure with to K style.
-    Requires axes hande or p.gca() (figure handle is deprecated).
-    Optional args are unit conversion on label if doing a second right ax,
-    then properties for the axis arrows.  These numbers are in Axes Coordinates.
+    myax(fig_or_axes,
+        conversion=None,rightaxlabel=None,
+        nudge=None,
+        AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0)
+    Converts a figure with defined labels to K style.
+    -Requires axes hande or p.gca() (figure handle is deprecated).
+    -Optional args are unit conversion and label if doing a second right ax,
+    -nudge must be given as a list/tup/array specifying the shift as fraction of bbox
+    -- i.e., nudge=('left',0.5,0.5) or nudge=(('left',0.5,0.5),('right',-0.5,0.5))
+    The rest are properties for the axis arrows.  These numbers are in Axes Coordinates.
     AL(=.2) is arrow length, including the head
     HL(=.045) is head length.
     HW(=.5) is head width as fraction of the head length!
@@ -21,16 +29,40 @@ def myax(figOrAx,conversion=None,rightaxlabel=None,AL=.2,HL=.045,HW=.5,OH=.3,TW=
      '''
     from matplotlib.figure import Figure
     from matplotlib.axes._subplots import Subplot
-    if type( figOrAx )  is Figure:
-        fig = figOrAx
+    if type( fig_or_axes )  is Figure:
+        fig = fig_or_axes
         ax = fig.gca()
-    elif type( figOrAx ) is Subplot:
-        ax = figOrAx
+    elif type( fig_or_axes ) is Subplot:
+        ax = fig_or_axes
         fig = ax.get_figure()
     else:
         raise ValueError('Got invalid figure or axes type as first argument, "{}"'.format(loc))
-    #Test right now wether a second right axis is being called
+    
+    # Test right now wether a second right axis is being called
     makeright = None not in [conversion,rightaxlabel]
+    
+    # Test right now for nudge
+    nudgeleft, nudgeright = False, False
+    if nudge is not None:
+        nudge = n.asarray(nudge)
+        if len(nudge.shape) == 1:
+            if nudge[0] == 'left':
+                nudge_left_x, nudge_left_y = nudge[1:].astype(float)
+                nudgeleft = True
+            elif nudge[0] == 'right':
+                nudge_right_x, nudge_right_y = nudge[1:].astype(float)
+                nudgeright = True
+            else:
+                raise ValueError('First arg of nudge must be "left" or "right"')
+        elif len(nudge.shape) == 2:
+            nudge_left_x, nudge_left_y = nudge[ nudge[:,0] == 'left',[1,2] ].astype(float).ravel()
+            nudge_right_x, nudge_right_y = nudge[ nudge[:,0] == 'right',[1,2] ].astype(float).ravel()
+            nudgeleft, nudgeright = True, True
+        else:
+            raise ValueError('Invalid Shape of args given to nudge')
+    else:
+         pass   
+    
     # Figure dimensions and axis bounds in figure coordinates
     figwd,fight = fig.get_size_inches()
     bboxAX = fig.transFigure.inverted().transform(ax.bbox.get_points())
@@ -93,6 +125,12 @@ def myax(figOrAx,conversion=None,rightaxlabel=None,AL=.2,HL=.045,HW=.5,OH=.3,TW=
     bboxYlab = inv.transform(ylab.get_window_extent(R).get_points())
     xpos = xpos - ( n.max(bboxYlab[:,0]) - xpos )
     axY.set_label_coords( xpos , ypos , transform = ax.transAxes)
+    if nudgeleft:
+        bbox_width, bbox_height = n.diff(bboxYlab, axis=0).ravel()
+        xpos += bbox_width*nudge_left_x
+        ypos += bbox_height*nudge_left_y
+        axY.set_label_coords( xpos , ypos , transform = ax.transAxes)
+        bboxYlab = inv.transform(ylab.get_window_extent(R).get_points())
     # Set arrow parameters and draw the arrow
     bot = n.min(bboxYlab[:,1])
     OH1=OH
@@ -127,6 +165,12 @@ def myax(figOrAx,conversion=None,rightaxlabel=None,AL=.2,HL=.045,HW=.5,OH=.3,TW=
         bboxYRlab = inv.transform(ylabR.get_window_extent(R).get_points())
         xpos = xpos + ( n.max(bboxYRlab[:,0]) - xpos )
         axYR.set_label_coords( xpos , ypos , transform = ax.transAxes)
+        if nudgeright:
+            bbox_width, bbox_height = n.diff(bboxYRlab, axis=0).ravel()
+            xpos += bbox_width*nudge_right_x
+            ypos += bbox_height*nudge_right_y
+            axYR.set_label_coords( xpos , ypos ,     transform = ax.transAxes)
+            bboxYRlab = inv.transform(ylabR.get_window_extent(R).get_points())
         bot = n.min(bboxYRlab[:,1])
         # Add arrow
         OH1=OH
