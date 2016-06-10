@@ -12,11 +12,15 @@ def myax(fig_or_axes,
         nudge=None,
         AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0)
     Converts a figure with defined labels to K style.
-    -Requires axes hande or p.gca() (figure handle is deprecated).
-    -Optional args are unit conversion and label if doing a second right ax,
-    -nudge must be given as a list/tup/array specifying the shift as fraction of bbox
-    -- i.e., nudge=('left',0.5,0.5) or nudge=(('left',0.5,0.5),('right',-0.5,0.5))
-    The rest are properties for the axis arrows.  These numbers are in Axes Coordinates.
+    
+    - Only required arg is axes hande or p.gca() (a figure handle is deprecated).
+    -First two optional args are unit conversion function and the label if making a right axis
+    -nudge allows you to move the Y axis labels. By default they are position just outside the
+     ticklabel bbox and at 3/4 in axes coordinates.  With nudge you specify a shift away from
+     this default position as a fraction of the axis label's bbox
+        Must be given as a list/tup/array specifying the shift as fraction of bbox
+        i.e., nudge=('left',0.5,0.5) or nudge=(('left',0.5,0.5),('right',-0.5,0.5))
+    -The rest are properties for the axis arrows.  These numbers are in Axes Coordinates.
     AL(=.2) is arrow length, including the head
     HL(=.045) is head length.
     HW(=.5) is head width as fraction of the head length!
@@ -24,8 +28,7 @@ def myax(fig_or_axes,
     TW(=.0035) is tail width (in absolute axes values)
     PLW(=0) is the patch **kwarg linewidth
     Args for arrow patch pertain to the y-axis arrow, and are scaled acoordingly for the x-axis.
-    The defaults are meant to optimize the appearance of the y-axis arrow.
-    If conversion and rightaxlabel are both not none, then the twinx() method is used to create a right ax
+    The defaults are meant to optimize the appearance of the y-axis arrow on an axes with a 5x4 aspect ratio.
      '''
     from matplotlib.figure import Figure
     from matplotlib.axes._subplots import Subplot
