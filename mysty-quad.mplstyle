@@ -1,0 +1,45 @@
+####################################
+#### For a 2x2 tiling of axes.######
+# Figure and axes are best instantiated with:
+# fig, ((ax11, ax12) ,(ax21, ax22)) = p.subplots(nrows=2, ncols=2)
+# Use p.title(.5,.91,'blah', transform = fig.transFigure, ha='center',va='bottom') to set figure title
+
+font.family         : sans-serif
+font.sans-serif     : Liberation Sans   # Close to Arial
+font.size           : 14
+
+mathtext.default    : rm         # ['default', 'scr', 'it', 'rm', 'bb', 'cal', 'tt', 'regular', 'circled', 'frak', 'bf', 'sf']
+mathtext.fontset    : stix
+mathtext.rm         : serif         # Only invoked if mathtext.fontset is custom
+
+figure.figsize      : 10, 10
+figure.facecolor    : w
+
+figure.subplot.left    : 0.1      # the left side of the subplots of the figure
+figure.subplot.right   : 0.9        # .9 is default.  the right side of the subplots of the figure
+figure.subplot.bottom  : 0.1      # the bottom of the subplots of the figure
+figure.subplot.top     : 0.9        # .9 is default. the top of the subplots of the figure
+
+xtick.direction         : out           # direction: in, out, or inout
+xtick.major.size        : 6         # major tick size in points
+xtick.major.width       : 1.5         # major tick width in points
+ytick.direction         : out           # direction: in, out, or inout
+ytick.major.size        : 6         # major tick size in points
+ytick.major.width       : 1.5         # major tick width in points
+
+#If version >= 1.5
+axes.prop_cycle     : cycler('color','F15854, 5DA5DA, FAA43A, 60BD68, DECF3F, B276B2, 4D4D4D')
+#Else
+#axes.color_cycle        : F15854, 5DA5DA, FAA43A, 60BD68, DECF3F, B276B2, 4D4D4D
+
+axes.linewidth          : 1.5 
+axes.labelsize          : 18
+lines.linewidth         : 1
+lines.antialiased       : True
+
+legend.fontsize         : 12
+legend.labelspacing     : 0.2
+legend.borderpad        : 0.1
+legend.frameon          : False
+legend.numpoints        : 1
+legend.scatterpoints    : 1
