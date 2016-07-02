@@ -32,14 +32,15 @@ def myax(fig_or_axes,
      '''
     from matplotlib.figure import Figure
     from matplotlib.axes._subplots import Subplot
+    from matplotlib.axes._axes import Axes
     if type( fig_or_axes )  is Figure:
         fig = fig_or_axes
         ax = fig.gca()
-    elif type( fig_or_axes ) is Subplot:
+    elif type( fig_or_axes ) in [Subplot,Axes]:
         ax = fig_or_axes
         fig = ax.get_figure()
     else:
-        raise ValueError('Got invalid figure or axes type as first argument, "{}"'.format(loc))
+        raise ValueError('Got invalid figure or axes type as first argument, {}'.format(fig_or_axes))
     
     # Test right now wether a second right axis is being called
     makeright = None not in [conversion,rightaxlabel]
