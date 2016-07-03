@@ -1,5 +1,5 @@
 font.family         : sans-serif
-font.sans-serif     : Arial   # Close to Arial
+font.sans-serif     : Arial   # Liberation Sans
 font.size           : 14
 
 mathtext.default    : rm         # ['default', 'scr', 'it', 'rm', 'bb', 'cal', 'tt', 'regular', 'circled', 'frak', 'bf', 'sf']
