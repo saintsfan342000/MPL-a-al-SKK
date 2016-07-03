@@ -5,7 +5,7 @@
 # Use p.title(.5,.91,'blah', transform = fig.transFigure, ha='center',va='bottom') to set figure title
 
 font.family         : sans-serif
-font.sans-serif     : Liberation Sans   # Close to Arial
+font.sans-serif     : Arial   # Liberation Sans
 font.size           : 14
 
 mathtext.default    : rm         # ['default', 'scr', 'it', 'rm', 'bb', 'cal', 'tt', 'regular', 'circled', 'frak', 'bf', 'sf']
