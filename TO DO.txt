@@ -1,9 +1,6 @@
-- Add feature to myax that lets you specify label position?
-i.e., add (ypos, xpos arguments?)
 - Change how myax() corrects the fontsize of fractions in y-axis labels
 i.e., rather than specifying 35 or whatever, make it a 1.1*current fontsize so that the routing works for differnt layouts which use smaller fonts (i.e, mysty-quad)
-- Define a "make12" function like make quad but for 1x2 subplots
-
+- An ezlegend function
 - Adhere to Caswells advice of myfunction(ax,data,style,**kwargs) return artists
   - See https://youtu.be/1vAZ1bJZkXo?t=23m1s
 
@@ -16,13 +13,14 @@ COMPLETED TO DOs
 https://github.com/saintsfan342000/MPL-a-al-SKK/commit/2bddc6f74a45ff55065535a61fc8dd66f922f338
 - Adjust default arrow props? Slightly shorter, and thinner tail?
 - Have myax return handles for the two axes that get created when adding a right ax?
-- Some kind of extext function definition to annotate the upper left, top right, etc. (eztext!)
+- Some kind of eztext function definition to annotate the upper left, top right, etc. (eztext!)
 - Have myax return handles for the two axes that get created when adding a right ax?
-https://github.com/saintsfan342000/MPL-a-al-SKK/commit/149205d4b5b091bffc94d1a302f747e80a6d18bc
 - Add **kwargs to eztext to pass to p.text
 - A label and arrow formatter for colorbars
   Done, but there is a bug.  Only works as a stand-alone function call in interactive mode
-
+- Define a "make12" function like make quad but for 1x2 subplots
+- Add feature to myax that lets you specify label position?
+i.e., add (ypos, xpos arguments?)
 
 
 FAILED TO DOs
