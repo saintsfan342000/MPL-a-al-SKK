@@ -1,5 +1,6 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# py and mplstyle files makred as text, perform LF normalization
+*.py text=auto
+*.mplstyle text=auto
 
 # Custom for Visual Studio
 *.cs     diff=csharp
