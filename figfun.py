@@ -319,6 +319,45 @@ def eztext(ax,text,loc='upper left',**kwargs):
     p.draw()
     return tx
 
+def ezlegend(ax, loc='outside', nudge=(0,0), hl=0, txt2lc=True, **kwargs):
+    ''' 
+    A helper function to add a legend and format it K-style.
+    Returns the legend handle.
+    -First arg must be the axis handle.  Other args:
+    -loc(='outside').
+     If 'outside', then placed on the right, outside the axis frame.
+     Otherwise, give it a MPL location (i.e., upper left).
+    -nudge(=(0,0)), a tuple specifying in axes coords how much to nudge the location
+     when 'outside' is the location.
+    -hl(=0) is the line handlelength.  
+     Set hl=None to use the default.
+    -txt2lc(=True) controls whether or not to set text to the color of its corresponding line.
+     If set to anything other than True, it will not do this.
+    **kwargs:  Any other legend option can be passed.
+    '''
+    # Immediately check hl.  If it's nonzero, then we're leaving lines in and want to leave
+    # the default handletextpad too.  Otherwise, handletextpad=0.
+    if hl != 0:
+        htp=None
+    else:
+        htp=0
+    if loc == 'outside':
+        leg = ax.legend(loc='center left',
+                        bbox_to_anchor=(1.00 + nudge[0], .5 + nudge[1]),
+                        bbox_transform=ax.transAxes,
+                        handlelength=hl,
+                        handletextpad=htp,  **kwargs)
+    else:
+        leg = ax.legend(loc=loc, handlelength=hl, handletextpad=htp, **kwargs)
+    # Set texts to linecolor
+    if txt2lc:
+        [i.set_color(leg.get_lines()[k].get_color()) for k,i in enumerate(leg.get_texts())]
+    # Set title size to same as texts
+    p.setp(leg.get_title(), fontsize=leg.get_texts()[0].get_fontsize())
+    # Return the legend
+    return leg
+
+
 def colorbar(ax,cbar,AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0):
     '''
     colorbar(ax,cbar,AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0)
