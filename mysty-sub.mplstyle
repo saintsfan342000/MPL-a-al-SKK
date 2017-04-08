@@ -22,7 +22,7 @@ ytick.major.size        : 6         # major tick size in points
 ytick.major.width       : 1.5         # major tick width in points
 
 #If version >= 1.5
-axes.prop_cycle     : cycler('color','F15854, 5DA5DA, FAA43A, 60BD68, DECF3F, B276B2, 4D4D4D')
+axes.prop_cycle      : cycler('color','1f77b4, ff7f0e, 2ca02c, d62728, 9467bd, 8c564b, e377c2, 7f7f7f, bcbd22, 17becf')
 #Else
 #axes.color_cycle        : F15854, 5DA5DA, FAA43A, 60BD68, DECF3F, B276B2, 4D4D4D
 
