@@ -1,5 +1,5 @@
 font.family         : sans-serif
-font.sans-serif     : Arial   # Liberation Sans
+font.sans-serif     : Liberation Sans  # Arial
 font.size           : 14
 
 mathtext.default    : rm         # ['default', 'scr', 'it', 'rm', 'bb', 'cal', 'tt', 'regular', 'circled', 'frak', 'bf', 'sf']
@@ -26,14 +26,20 @@ axes.labelsize          : 18
 lines.linewidth         : 1.5
 lines.antialiased       : True
 
-#If version >= 1.5
-axes.prop_cycle      : cycler('color','1f77b4, ff7f0e, 2ca02c, d62728, 9467bd, 8c564b, e377c2, 7f7f7f, bcbd22, 17becf')
-#Else
-#axes.color_cycle        : F15854, 5DA5DA, FAA43A, 60BD68, DECF3F, B276B2, 4D4D4D
+### These are not valid in versions 1.5.x and below
+# axes.autolimit_mode: round_numbers
+axes.xmargin: 0.01
+axes.ymargin: 0.01
 
 legend.fontsize         : 12
 legend.labelspacing     : 0.2
 legend.borderpad        : 0.1
 legend.frameon          : False
 legend.numpoints        : 1
-legend.scatterpoints    : 1
+legend.scatterpoints    : 1    
+
+# Using the new 2.0 default color cycle now
+# if version=1.5.x
+#axes.prop_cycle      : cycler('color','1f77b4, ff7f0e, 2ca02c, d62728, 9467bd, 8c564b, e377c2, 7f7f7f, bcbd22, 17becf')
+# elif version < 1.5
+#axes.color_cycle        : F15854, 5DA5DA, FAA43A, 60BD68, DECF3F, B276B2, 4D4D4D
