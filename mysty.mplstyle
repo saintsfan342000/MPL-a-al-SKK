@@ -6,13 +6,13 @@ mathtext.default    : rm         # ['default', 'scr', 'it', 'rm', 'bb', 'cal', '
 mathtext.fontset    : stix
 mathtext.rm         : serif         # Only invoked if mathtext.fontset is custom
 
-figure.figsize      : 8, 8
+figure.figsize      : 8, 6
 figure.facecolor    : w
 
-figure.subplot.left    : 0.1875      # the left side of the subplots of the figure
-figure.subplot.right   : 0.8125        # .9 is default.  the right side of the subplots of the figure
-figure.subplot.bottom  : 0.25      # the bottom of the subplots of the figure
-figure.subplot.top     : 0.75        # .9 is default. the top of the subplots of the figure
+figure.subplot.left    : 0.1875
+figure.subplot.right   : 0.8125
+figure.subplot.bottom  : 0.1666666666
+figure.subplot.top     : 0.8333333333
 
 xtick.direction         : out           # direction: in, out, or inout
 xtick.major.size        : 6         # major tick size in points
