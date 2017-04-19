@@ -27,9 +27,9 @@ lines.linewidth         : 1.5
 lines.antialiased       : True
 
 ### These are not valid in versions 1.5.x and below
-# axes.autolimit_mode: round_numbers
-axes.xmargin: 0.01
-axes.ymargin: 0.01
+axes.autolimit_mode: round_numbers
+axes.xmargin: 0.00
+axes.ymargin: 0.00
 
 legend.fontsize         : 12
 legend.labelspacing     : 0.2
