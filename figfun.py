@@ -4,6 +4,7 @@ from matplotlib.patches import Polygon
 
 def myax(fig_or_axes,
         conversion=None,rightaxlabel=None,
+        autoscale=True,
         nudge=None,
         AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0):
     '''
@@ -15,6 +16,11 @@ def myax(fig_or_axes,
     
     - Only required arg is axes hande or p.gca() (a figure handle is deprecated).
     -First two optional args are unit conversion function and the label if making a right axis
+    -autoscale(=True):  If True, then the arrows are automatically scaled with the axes.
+        If 'preserve', then the arrows are adjusted to be the exact same size as those on the standard 5x4 axes.
+        Both options hinge on the established defaults of HL=.045,HW=.5, and ,TW=.0035
+        along with the mysty default axes size of 5x4.  So if these are ever messed with this could have issues.
+        If False, then the defaults, or the values you input, are used.
     -nudge allows you to move the Y axis labels. By default they are position just outside the
      ticklabel bbox and at 3/4 in axes coordinates.  With nudge you specify a shift away from
      this default position as a fraction of the axis label's bbox
@@ -104,7 +110,25 @@ def myax(fig_or_axes,
     axX.set_label_coords( (3/4), n.min(bboxXticklabs[:,1]), transform = ax.transAxes)
     bboxXlab = inv.transform(xlab.get_window_extent(R).get_points())
     # Set arrow parameters and draw the arrow
-    left = n.min(bboxXlab[:,0]) 
+    left = n.min(bboxXlab[:,0])
+    
+    ### Autoscaling of arrow properties:
+    if autoscale in [True, 'preserve']:
+        DY = (y2-y1)*fight
+        DX = (x2-x1)*figwd
+        if autoscale is True:
+            HW = .045
+            HW = .5*5/DX*(DY/4)
+            TW = .0035*5/DX*(DY/4)
+        elif autoscale is 'preserve':
+            HL=.045*(4/DY)
+            HW=.5*5/DX*(DY/4)
+            TW=.0035*5/DX
+    elif autoscale is False:
+        pass
+    else:
+        raise ValueError('Invalid value given for argument autoscale.\n"{}" given.  "True", "False", or "preserve" required.'.format(autoscale))
+     
     AL1 = AL            #(no *h2w because we want arrow length to scale with axis size)
     HL1=HL*h2w
     TW1=TW*(1/h2w)
@@ -157,7 +181,8 @@ def myax(fig_or_axes,
                 i.remove()
         y1, y2 = axL.get_ylim()
         axR.set_ylim(conversion(y1), conversion(y2))
-        axR.set_ylabel(rightaxlabel)
+        axR.set_ylabel(rightaxlabel, fontsize=ylab.get_size())
+        axR.tick_params(labelsize=axY.get_ticklabels()[0].get_fontsize())
         axYR = axR.yaxis
         ylabR = axYR.get_label()
         bboxYRticklabs = inv.transform( axYR.get_ticklabel_extents(R)[1].get_points() )

@@ -1,12 +1,5 @@
-- Change how myax() corrects the fontsize of fractions in y-axis labels
-i.e., rather than specifying 35 or whatever, make it a 1.1*current fontsize so that the routing works for differnt layouts which use smaller fonts (i.e, mysty-quad)
-- An ezlegend function
 - Adhere to Caswells advice of myfunction(ax,data,style,**kwargs) return artists
   - See https://youtu.be/1vAZ1bJZkXo?t=23m1s
-
-  
-
-
 
 COMPLETED TO DOs
 - Create a walk-through example.  Find a typical SKK figure, and try to duplicate it. 
@@ -14,16 +7,21 @@ https://github.com/saintsfan342000/MPL-a-al-SKK/commit/2bddc6f74a45ff55065535a61
 - Adjust default arrow props? Slightly shorter, and thinner tail?
 - Have myax return handles for the two axes that get created when adding a right ax?
 - Some kind of eztext function definition to annotate the upper left, top right, etc. (eztext!)
-- Have myax return handles for the two axes that get created when adding a right ax?
 - Add **kwargs to eztext to pass to p.text
 - A label and arrow formatter for colorbars
   Done, but there is a bug.  Only works as a stand-alone function call in interactive mode
 - Define a "make12" function like make quad but for 1x2 subplots
-- Add feature to myax that lets you specify label position?
-i.e., add (ypos, xpos arguments?)
-
+- Add feature to myax that lets you specify label position? i.e., add (ypos, xpos arguments?)  DONe==> nudge
+- Change how myax() corrects the fontsize of fractions in y-axis labels ==> Done
+- When creating a right y-axis, the ticklabel and axis label fontsizes are made to identical to the left y-axis.  This cannot be overridden.
+- Done by specifying fontsize=ylab.get_fontsize() when setting ylabel on axR, and then axR.tick_params(labelsize=axR.yaxis.tick_labels()[0].get_fontsize())
+---Reason:  I noticed that if a different style-sheet was called after instantiating a figure and axes, but before calling myax on that axes, then
+            the label fontsize would be that of the newly-called style sheet.  Discovered in a looping plot script C_Multiplot of GMPT.
+- An ezlegend function ==> Done
+- Arrow sizes now are automatically scaled to the axes size to be the right shape and size!  autoscale argument.
 
 FAILED TO DOs
 - Add p.sca(axleft) to end of myax
     Didn't solve the problem of data referring to right axis after adding second axis
+    ==> Solution:  use ax.plot!
 
