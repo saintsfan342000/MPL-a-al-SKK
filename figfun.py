@@ -18,6 +18,7 @@ def myax(fig_or_axes,
     -First two optional args are unit conversion function and the label if making a right axis
     -autoscale(=True):  If True, then the arrows are automatically scaled with the axes.
         If 'preserve', then the arrows are adjusted to be the exact same size as those on the standard 5x4 axes.
+        If a float or int, then the aspect ratio is maintained but size adjusted.
         Both options hinge on the established defaults of HL=.045,HW=.5, and ,TW=.0035
         along with the mysty default axes size of 5x4.  So if these are ever messed with this could have issues.
         If False, then the defaults, or the values you input, are used.
@@ -100,7 +101,7 @@ def myax(fig_or_axes,
             current_size = ylab.get_size()
             lab.set_size( current_size * (30/18) )
             # 30 was found to be a good adjusted size for the incoming default of 18
-
+    
     ########## X Label and Arrow ##########
     # Get the bounding box for the x tick labels and convert it to axes coords
     bboxXticklabs = inv.transform( axX.get_ticklabel_extents(R)[0].get_points() )
@@ -113,17 +114,17 @@ def myax(fig_or_axes,
     left = n.min(bboxXlab[:,0])
     
     ### Autoscaling of arrow properties:
-    if autoscale in [True, 'preserve']:
+    if (autoscale in [True, 'preserve']) or (type(autoscale) in [int, float]):
         DY = (y2-y1)*fight
         DX = (x2-x1)*figwd
-        if autoscale is True:
-            HW = .045
-            HW = .5*5/DX*(DY/4)
-            TW = .0035*5/DX*(DY/4)
-        elif autoscale is 'preserve':
+        if autoscale is 'preserve':
             HL=.045*(4/DY)
             HW=.5*5/DX*(DY/4)
             TW=.0035*5/DX
+        else: 
+            HL = .045*autoscale # n*True = n
+            HW = .5*5/DX*(DY/4)
+            TW = .0035*5/DX*(DY/4)*autoscale
     elif autoscale is False:
         pass
     else:
