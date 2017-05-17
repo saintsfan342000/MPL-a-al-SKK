@@ -83,7 +83,7 @@ def myax(fig_or_axes,
     for i in ax.get_children():
         if type(i) is MyArrow:
             i.remove()
-    #An inverse transform that will take me from display to data coordinates
+    #An inverse transform that will take me from display to axes coordinates
     inv = ax.transAxes.inverted()
     #Handle for renderer
     R = fig.canvas.get_renderer()
@@ -98,7 +98,7 @@ def myax(fig_or_axes,
     # Check the labels to see whether they're mathtext fractions and increase size if so
     for lab in [xlab,ylab]:
         if lab.get_text().find(r'\frac') != -1:
-            current_size = ylab.get_size()
+            current_size = lab.get_size()
             lab.set_size( current_size * (30/18) )
             # 30 was found to be a good adjusted size for the incoming default of 18
     
@@ -128,7 +128,7 @@ def myax(fig_or_axes,
     elif autoscale is False:
         pass
     else:
-        raise ValueError('Invalid value given for argument autoscale.\n"{}" given.  "True", "False", or "preserve" required.'.format(autoscale))
+        raise ValueError('Invalid value "{}" given for argument autoscale.\nTrue, False, "preserve", or float/int required.'.format(autoscale))
      
     AL1 = AL            #(no *h2w because we want arrow length to scale with axis size)
     HL1=HL*h2w
@@ -384,7 +384,7 @@ def ezlegend(ax, loc='outside', nudge=(0,0), hl=0, txt2lc=True, **kwargs):
     return leg
 
 
-def colorbar(ax,cbar,AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0):
+def colorbar(ax,cbar,autoscale='preserve',AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0):
     '''
     colorbar(ax,cbar,AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0)
     
@@ -416,7 +416,8 @@ def colorbar(ax,cbar,AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0):
     ylab = caxY.get_label()
     
     if ylab.get_text().find(r'\frac') != -1:
-            ylab.set_size(30)
+            current_size = ylab.get_size()
+            ylab.set_size( current_size * (30/18) )
     
     ticklabelbbox = inv.transform( caxY.get_ticklabel_extents(R)[1].get_points() )
     ylab.set_verticalalignment('center')
@@ -429,6 +430,28 @@ def colorbar(ax,cbar,AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0):
     caxY.set_label_coords( xpos , ypos , transform = ax.transAxes)
     # Set arrow parameters and draw the arrow
     bot = n.min(bboxLy[:,1])
+  
+    figwd,fight = fig.get_size_inches()
+    bboxAX = fig.transFigure.inverted().transform(ax.bbox.get_points())
+    x1,y1,x2,y2 = bboxAX.flatten()  
+        ### Autoscaling of arrow properties:
+    if (autoscale in [True, 'preserve']) or (type(autoscale) in [int, float]):
+        DY = (y2-y1)*fight
+        DX = (x2-x1)*figwd
+        if autoscale is 'preserve':
+            HL=.045*(4/DY)
+            HW=.5*5/DX*(DY/4)
+            TW=.0035*5/DX
+        else: 
+            HL = .045*autoscale # n*True = n
+            HW = .5*5/DX*(DY/4)
+            TW = .0035*5/DX*(DY/4)*autoscale
+    elif autoscale is False:
+        pass
+    else:
+        raise ValueError('Invalid value "{}" given for argument autoscale.\nTrue, False, "preserve", or float/int required.'.format(autoscale))
+    
+    
     OH1=OH
     HL1=HL
     HW1=HW
