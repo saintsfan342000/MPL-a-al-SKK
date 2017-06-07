@@ -10,8 +10,9 @@ def myax(fig_or_axes,
     '''
     myax(fig_or_axes,
         conversion=None,rightaxlabel=None,
+        autoscale=True,
         nudge=None,
-        AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0)
+        AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0):
     Converts a figure with defined labels to K style.
     
     - Only required arg is axes hande or p.gca() (a figure handle is deprecated).
