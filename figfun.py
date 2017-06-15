@@ -346,7 +346,7 @@ def eztext(ax,text,loc='upper left',**kwargs):
     p.draw()
     return tx
 
-def ezlegend(ax, loc='outside', nudge=(0,0), hl=0, txt2lc=True, **kwargs):
+def ezlegend(ax, loc='outside', nudge=(0,0), hl=0, txt2lc=True, markers=False, **kwargs):
     ''' 
     A helper function to add a legend and format it K-style.
     Returns the legend handle.
@@ -360,12 +360,14 @@ def ezlegend(ax, loc='outside', nudge=(0,0), hl=0, txt2lc=True, **kwargs):
      Set hl=None to use the default.
     -txt2lc(=True) controls whether or not to set text to the color of its corresponding line.
      If set to anything other than True, it will not do this.
+    -markers(=False): If the plots are markers, not lines, then special care must be taken.  
+     use markers=True.
     **kwargs:  Any other legend option can be passed.
     '''
     # Immediately check hl.  If it's nonzero, then we're leaving lines in and want to leave
     # the default handletextpad too.  Otherwise, handletextpad=0.
-    if hl != 0:
-        htp=None
+    if (hl != 0) or (markers is True):
+        htp=None # Use the default specified in rcparams
     else:
         htp=0
     if loc == 'outside':
@@ -377,8 +379,11 @@ def ezlegend(ax, loc='outside', nudge=(0,0), hl=0, txt2lc=True, **kwargs):
     else:
         leg = ax.legend(loc=loc, handlelength=hl, handletextpad=htp, **kwargs)
     # Set texts to linecolor
-    if txt2lc:
-        [i.set_color(leg.get_lines()[k].get_color()) for k,i in enumerate(leg.get_texts())]
+    if txt2lc is True:
+        if markers is True:
+            [i.set_color(leg.get_lines()[k].get_mfc()) for k,i in enumerate(leg.get_texts())]
+        else:
+            [i.set_color(leg.get_lines()[k].get_color()) for k,i in enumerate(leg.get_texts())]
     # Set title size to same as texts
     p.setp(leg.get_title(), fontsize=leg.get_texts()[0].get_fontsize())
     # Return the legend
