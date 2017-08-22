@@ -1,5 +1,5 @@
 # MPL-a-al-SKK
-Getting Matplotlib to meet the maniacal figure standards of Dr. Stelios Kyriakides
+Getting Matplotlib to meet the maniacal figure standards of my grad advisor.
 
 ## Now with a tutorial!  See "Tutorial.ipynb" for a little walkthrough.
 
