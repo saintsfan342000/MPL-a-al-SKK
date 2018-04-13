@@ -38,6 +38,8 @@ legend.frameon          : False
 legend.numpoints        : 1
 legend.scatterpoints    : 1    
 
+savefig.bbox            : tight
+
 # Using the new 2.0 default color cycle now
 # if version=1.5.x
 #axes.prop_cycle      : cycler('color','1f77b4, ff7f0e, 2ca02c, d62728, 9467bd, 8c564b, e377c2, 7f7f7f, bcbd22, 17becf')

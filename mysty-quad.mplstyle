@@ -36,7 +36,9 @@ legend.labelspacing     : 0.2
 legend.borderpad        : 0.1
 legend.frameon          : False
 legend.numpoints        : 1
-legend.scatterpoints    : 1    
+legend.scatterpoints    : 1
+
+savefig.bbox            : tight
 
 # Using the new 2.0 default color cycle now
 # if version=1.5.x

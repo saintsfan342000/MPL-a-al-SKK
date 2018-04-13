@@ -219,7 +219,7 @@ def myax(fig_or_axes,
         p.draw()
         return ax
 
-def makequad():
+def makequad(scale=1):
     ''' 
     Return a new figure with 2x2 tiled axes, properly spaced according to Fig.3
     in Chen, Scales, Kyriakides.
@@ -228,11 +228,7 @@ def makequad():
     
     Returns: fig, ax00, ax01, ax10, ax11
     '''
-    pad = 1
-    hgap = 1.5
-    vgap = 0.9
-    axwt = 10/3
-    axht = 8/3
+    pad, hgap, vgap, axwt, axht = [i*scale for i in (1, 1.5, .9, 10/3, 8/3)]
     W = 2*pad + hgap + 2*axwt
     H = 2*pad + vgap + 2*axht
     fig1 = p.figure(figsize=(W,H))
@@ -247,36 +243,28 @@ def makequad():
     
     return fig1, ax00, ax01, ax10, ax11
 
-def make21():
+def make21(scale=1):
     '''
     Make a 2x1 subplot, properly layed out.
     Returns: fig, axtop, axbot
+    scale will reduce the size by a factor of scale
     Good with 'mysty.mplstyle'
     '''
-    hpad = 1.5
-    vpad = 1
-    vgap = 1.5
-    axht = 4
-    axwt = 5
+    hpad, vpad, vgap, axht, axwt = [i*scale for i in (1.5, 1, 1.5, 4, 5)]
     W = 2*hpad+axwt
     H = 2*vpad+2*axht+vgap
     fig = p.figure(figsize=(W,H))
     axtop = fig.add_axes([hpad/W,(vpad+axht+vgap)/H,axwt/W,axht/H])
     axbot = fig.add_axes([hpad/W,vpad/H,axwt/W,axht/H])
-    
     return fig, axtop, axbot
     
-def make12():
+def make12(scale=1):
     '''
     Make a 1x2 subplot, properly layed out.
     Returns: fig, axleft, axrt
     Good with 'mysty.mplstyle'
     '''
-    hpad = 1.5
-    vpad = 1
-    hgap = 2
-    axht = 4
-    axwt = 5
+    hpad, vpad, hgap, axht, axwt = [i*scale for i in (1.5, 1, 2, 4, 5)]
     W = 2*hpad+2*axwt+hgap
     H = 2*vpad+axht
     fig = p.figure(figsize=(W,H))
