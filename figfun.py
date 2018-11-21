@@ -275,6 +275,11 @@ def make12(scale=1):
     
     return fig, axleft, axrt    
     
+def makesquare(scale=1):
+    fig = p.figure(figsize=(8*scale,8*scale))
+    ax = fig.add_axes([1.5/8, 1.5/8, 5/8, 5/8])
+    return fig, ax    
+    
 def ksi2Mpa(ksi):
     """
     Multipls ksi by 6.89475908677537
