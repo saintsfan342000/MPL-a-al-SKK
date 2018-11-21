@@ -1,6 +1,8 @@
 import matplotlib.pyplot as p
 import numpy as n
 from matplotlib.patches import Polygon
+from matplotlib.lines import Line2D
+
 
 def myax(fig_or_axes,
         conversion=None,rightaxlabel=None,
@@ -277,7 +279,7 @@ def ksi2Mpa(ksi):
     """
     Multipls ksi by 6.89475908677537
     """
-    return ksi * 6.89475908677537
+    return ksi * 6.89655
 
 def TickLabelFS(ax,fs=30,which='both'):
     '''
@@ -564,3 +566,79 @@ class MyArrow(Polygon):
             #p.plot(verts[:,0],verts[:,1])
             verts = n.dot(coords, M) + [x+dx, y+dy]
         Polygon.__init__(self, list(map(tuple, verts)), closed=True, **kwargs)    
+
+class LineBuilder(object):
+
+    '''
+    Taken from https://stackoverflow.com/questions/34855074/interactive-line-in-matplotlib
+    Allows you to click the endpoints of line and move it!
+    Usage:
+        myline, = p.plot([0,1],[0,1])
+        LineBuilder(myline)
+    That's it!
+    Be sure to instantiate other draggable artists before passing line to linebuilder!
+    '''
+    epsilon = 0.5
+
+    def __init__(self, line):
+            canvas = line.figure.canvas
+            self.canvas = canvas
+            self.line = line
+            self.axes = line.axes
+            self.xs = list(line.get_xdata())
+            self.ys = list(line.get_ydata())
+
+            self.ind = None
+
+            canvas.mpl_connect('button_press_event', self.button_press_callback)
+            canvas.mpl_connect('button_release_event', self.button_release_callback)
+            canvas.mpl_connect('motion_notify_event', self.motion_notify_callback)
+
+    def get_ind(self, event):
+        x = n.array(self.line.get_xdata())
+        y = n.array(self.line.get_ydata())
+        d = n.sqrt((x-event.xdata)**2 + (y - event.ydata)**2)
+        if min(d) > self.epsilon:
+            return None
+        if d[0] < d[1]:
+            return 0
+        else:
+            return 1
+
+    def button_press_callback(self, event):
+        if event.button != 1:
+            return
+        self.ind = self.get_ind(event)
+        #print(self.ind)
+
+        self.line.set_animated(True)
+        self.canvas.draw()
+        self.background = self.canvas.copy_from_bbox(self.line.axes.bbox)
+
+        self.axes.draw_artist(self.line)
+        self.canvas.blit(self.axes.bbox)
+
+    def button_release_callback(self, event):
+        if event.button != 1:
+            return
+        self.ind = None
+        self.line.set_animated(False)
+        self.background = None
+        self.line.figure.canvas.draw()
+
+    def motion_notify_callback(self, event):
+        if event.inaxes != self.line.axes:
+            return
+        if event.button != 1:
+            return
+        if self.ind is None:
+            return
+        self.xs[self.ind] = event.xdata
+        self.ys[self.ind] = event.ydata
+        self.line.set_data(self.xs, self.ys)
+
+        self.canvas.restore_region(self.background)
+        self.axes.draw_artist(self.line)
+        self.canvas.blit(self.axes.bbox)
+
+        
