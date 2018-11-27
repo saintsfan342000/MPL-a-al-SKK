@@ -6,12 +6,14 @@ from matplotlib.lines import Line2D
 
 def myax(fig_or_axes,
         conversion=None,rightaxlabel=None,
+        topconversion=None, topaxlabel=None,
         autoscale=True,
         nudge=None,
         AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0):
     '''
     myax(fig_or_axes,
         conversion=None,rightaxlabel=None,
+        topconversion=None, topaxlabel=None,
         autoscale=True,
         nudge=None,
         AL=.2,HL=.045,HW=.5,OH=.3,TW=.0035,PLW=0):
@@ -19,6 +21,7 @@ def myax(fig_or_axes,
     
     - Only required arg is axes hande or p.gca() (a figure handle is deprecated).
     -First two optional args are unit conversion function and the label if making a right axis
+    - Then unit conversion and label for top x-axis 
     -autoscale(=True):  If True, then the arrows are automatically scaled with the axes.
         If 'preserve', then the arrows are adjusted to be the exact same size as those on the standard 5x4 axes.
         If a float or int, then the aspect ratio is maintained but size adjusted.
@@ -54,6 +57,8 @@ def myax(fig_or_axes,
     
     # Test right now wether a second right axis is being called
     makeright = None not in [conversion,rightaxlabel]
+    # Test right now wether a second top axis is being called
+    maketop = None not in [topconversion,topaxlabel]
     
     # Test right now for nudge
     nudgeleft, nudgeright = False, False
@@ -177,8 +182,10 @@ def myax(fig_or_axes,
     
     ###### Right Y-label #########
     ## Works the same way as previous y label formatting
+    returners = [ax]
     if makeright:
         axL, axR = ax, ax.twinx()
+        returners.append(axR)
         # Doesn't quite work but is an improvement
         for i in axR.get_children():
             if type(i) is MyArrow:
@@ -198,12 +205,7 @@ def myax(fig_or_axes,
         bboxYRlab = inv.transform(ylabR.get_window_extent(R).get_points())
         xpos = xpos + ( n.max(bboxYRlab[:,0]) - xpos )
         axYR.set_label_coords( xpos , ypos , transform = ax.transAxes)
-        if nudgeright:
-            bbox_width, bbox_height = n.diff(bboxYRlab, axis=0).ravel()
-            xpos += bbox_width*nudge_right_x
-            ypos += bbox_height*nudge_right_y
-            axYR.set_label_coords( xpos , ypos ,     transform = ax.transAxes)
-            bboxYRlab = inv.transform(ylabR.get_window_extent(R).get_points())
+ 
         bot = n.min(bboxYRlab[:,1])
         # Add arrow
         OH1=OH
@@ -216,10 +218,40 @@ def myax(fig_or_axes,
         axR.add_patch(ar)
         ar.set_clip_on(False)
         p.draw()
-        return axL, axR
-    else:
-        p.draw()
-        return ax
+    if maketop:
+        axB, axT = ax, ax.twiny()
+        returners.append(axT)
+        # Doesn't quite work but is an improvement
+        for i in axT.get_children():
+            if type(i) is MyArrow:
+                i.remove()
+        x1, x2 = axB.get_xlim()
+        axT.set_xlim(topconversion(x1), topconversion(x2))
+        axT.set_xlabel(topaxlabel, fontsize=xlab.get_size())
+        axT.tick_params(labelsize=axX.get_ticklabels()[0].get_fontsize())
+        axXT = axT.xaxis
+        xlabT = axXT.get_label()
+        # Get the bounding box for the x tick labels and convert it to axes coords
+        bboxXTticklabs = inv.transform( axXT.get_ticklabel_extents(R)[1].get_points() )
+        xlabT.set_va('bottom')
+        xlabT.set_horizontalalignment('left')
+        # Move the axis label, and grab its new bbox
+        axXT.set_label_coords( (3/4), n.max(bboxXTticklabs[:,1]), transform = ax.transAxes)
+        
+        bboxXTlab = inv.transform(xlabT.get_window_extent(R).get_points())
+        left = n.min(bboxXTlab[:,0])
+        AL1 = AL            #(no *h2w because we want arrow length to scale with axis size)
+        HL1=HL*h2w
+        TW1=TW*(1/h2w)
+        HW1=HW*(1/h2w)**2   # Squared because HW is a fraction of HL, and HL has been stretched by h2w
+        OH1=OH              # No h2w here because OH is fraction of HL, which has already been scaled
+        ar=MyArrow(left-AL1-HL1/2,n.mean(bboxXTlab[:,1]),AL1,0,head_length=HL1,overhang=OH1,
+                        head_width=HW1,tail_width=TW1,lw=PLW,transform=axT.transAxes,color='k')
+        axT.add_patch(ar)
+        ar.set_clip_on(False)
+
+    p.draw()
+    return returners
 
 def makequad(scale=1):
     ''' 
