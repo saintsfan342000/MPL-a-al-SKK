@@ -205,7 +205,12 @@ def myax(fig_or_axes,
         bboxYRlab = inv.transform(ylabR.get_window_extent(R).get_points())
         xpos = xpos + ( n.max(bboxYRlab[:,0]) - xpos )
         axYR.set_label_coords( xpos , ypos , transform = ax.transAxes)
- 
+        if nudgeright:
+            bbox_width, bbox_height = n.diff(bboxYRlab, axis=0).ravel()
+            xpos += bbox_width*nudge_right_x
+            ypos += bbox_height*nudge_right_y
+            axYR.set_label_coords( xpos , ypos ,     transform = ax.transAxes)
+            bboxYRlab = inv.transform(ylabR.get_window_extent(R).get_points())
         bot = n.min(bboxYRlab[:,1])
         # Add arrow
         OH1=OH
