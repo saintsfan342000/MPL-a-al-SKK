@@ -413,7 +413,15 @@ def ezlegend(ax, loc='outside', nudge=(0,0), hl=0, txt2lc=True, markers=False, *
     # Set texts to linecolor
     if txt2lc is True:
         if markers is True:
-            [i.set_color(leg.get_lines()[k].get_mfc()) for k,i in enumerate(leg.get_texts())]
+            usemfc = True
+            for l in leg.get_lines():
+                if l.get_mfc() in ['w', 'none']:
+                    usemfc = False
+                    break
+            if usemfc:
+                [i.set_color(leg.get_lines()[k].get_mfc()) for k,i in enumerate(leg.get_texts())]
+            else:
+                [i.set_color(leg.get_lines()[k].get_mec()) for k,i in enumerate(leg.get_texts())]
         else:
             [i.set_color(leg.get_lines()[k].get_color()) for k,i in enumerate(leg.get_texts())]
     # Set title size to same as texts
